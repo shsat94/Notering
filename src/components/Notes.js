@@ -2,13 +2,20 @@ import React, { useContext, useEffect, useRef,useState } from 'react';
 import NoteContext from '../context/notes/NoteContext';
 import NoteItem from './NoteItem';
 import AddNote from './AddNote';
+import { useNavigate } from 'react-router-dom';
 
-const Notes = () => {
+const Notes = (props) => {
+    let navigate =useNavigate();
     const context = useContext(NoteContext);
     const { notes, fetchAllNotes,editNote } = context;
     useEffect(() => {
-        fetchAllNotes()
-    },[fetchAllNotes]);
+        if(localStorage.getItem('token')){
+            fetchAllNotes()
+        }
+        else{
+            navigate('/login');
+        }
+    },[fetchAllNotes,navigate]);
     const ref = useRef(null);
     const refClose = useRef(null);
     const [note,setNote]=useState({_id:"",title:"",description:"",tag:""})
@@ -16,10 +23,12 @@ const Notes = () => {
     const updateNote = (currentnote) => {
         ref.current.click();
         setNote(currentnote);
+        
     }
     const handleClick=(e)=>{
         e.preventDefault();
         editNote(note._id,note.title,note.description,note.tag);
+        props.showAlert("Updated Successfully","success");
         refClose.current.click();
     }
 
@@ -29,7 +38,7 @@ const Notes = () => {
     }
     return (
         <>
-            <AddNote />
+            <AddNote showAlert={props.showAlert} />
             <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" ref={ref} data-bs-target="#exampleModal">
             </button>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -51,25 +60,29 @@ const Notes = () => {
                                     <input type="textarea" value={note.description} className="form-control" id="desc" name="description" onChange={onChange} />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="etag" className="form-label">Tag</label>
-                                    <input type="text" className="form-control" value={note.tag} id="etag" name="etag" onChange={onChange} />
+                                    <label htmlFor="tag" className="form-label">Tag</label>
+                                    <input type="text" className="form-control" value={note.tag} id="tag" name="tag" onChange={onChange} />
                                 </div>
                                  
                             </form>
                         </div>
                         <div className="modal-footer">
                             <button type="button" ref={refClose} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" onClick={handleClick} className="btn btn-primary">Update Note</button>
+                            <button disabled={note.title.length<5 || note.description.length<5}  type="button" onClick={handleClick} className="btn btn-primary">Update Note</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <h2 className='my-3'>Your notes</h2>
-                {notes.map((note) => {
-                    return <NoteItem key={note._id} updateNote={updateNote} note={note} />;
+                <div className="container">
+                {notes.length===0 && 'No notes to display'}
+                </div>
+                {notes && notes.map((note) => {
+                    return <NoteItem key={note._id} showAlert={props.showAlert} updateNote={updateNote} note={note} />;
                 })}
             </div>
+            
 
         </>
     )

@@ -25,9 +25,10 @@ router.post('/createuser', [
     //create a new user
 
     try {
+        let success=false
         let user = await User.findOne({ email: req.body.email });
         if (user) {
-            return res.status(400).json({ error: "already a user" })
+            return res.status(400).json({success, error: "already a user" })
         }
         //password hashing
         const salt = await bcrypt.genSalt(10);
@@ -44,7 +45,8 @@ router.post('/createuser', [
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        success=true
+        res.json({ success, authToken });
     }
     catch (error) {
         res.status(500).send("some Error Occured");
@@ -66,22 +68,24 @@ router.post('/login', [
 
     const { email, password } = req.body;
     try {
+        let success=false
         let user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(400).json({ error: 'Login with current credentials' });
+            return res.status(400).json({ success, error: 'Login with current credentials' });
         }
 
         const comparePassword = await bcrypt.compare(password, user.password);
         if (!comparePassword) {
-            return res.status(400).json({ error: 'Login with current credentials' });
+            return res.status(400).json({ success,error: 'Login with current credentials' });
         }
         const data = {
             user: {
                 id: user.id
             }
         }
+        success=true
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        res.json({ success,authToken });
 
     } catch (error) {
         console.log(error);
