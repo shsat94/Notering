@@ -1,0 +1,10 @@
+{
+    "version":2,
+    "name":"notering",
+    "builds":[
+        { "src":"app.js","use":"@vecel/node"}
+    ],
+    "routes":[
+        {"src":"/(.*)","dest":"/app.js"}
+    ]
+}
