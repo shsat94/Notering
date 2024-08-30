@@ -7,7 +7,7 @@ const Signup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {name,email,password}=credentials;
-    const res = await fetch(`http://localhost:5000/api/auth/createuser`, {
+    const res = await fetch(`https://notering-backend.onrender.com/api/auth/createuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
