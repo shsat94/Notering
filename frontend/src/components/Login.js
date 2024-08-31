@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
+import loadingbarContext from '../context/notes/LoadingbarContext';
 
 const Login = (props) => {
     const host = "https://notering-backend.onrender.com";
     const [credentials, setCreadentials] = useState({ email: '', password: '' });
+    const context=useContext(loadingbarContext);
     let navigate = useNavigate();
     const [Pass, setPass] = useState('password');
     const passwordVisibility = () => {
@@ -16,7 +18,9 @@ const Login = (props) => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
+        context.setProgress(0);
+        context.setProgress(30);
         const res = await fetch(`${host}/api/auth/login`, {
             method: 'POST',
             headers: {
@@ -24,8 +28,10 @@ const Login = (props) => {
             },
             body: JSON.stringify({ email: credentials.email, password: credentials.password })
         });
+        context.setProgress(70);
         const json = await res.json();
         console.log(json);
+        context.setProgress(100);
         if (json.success) {
             localStorage.setItem('token', json.authToken);
             props.showAlert("Logged in successfully", "success")

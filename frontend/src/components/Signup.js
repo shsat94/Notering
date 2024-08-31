@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import loadingbarContext from '../context/notes/LoadingbarContext';
 
 const Signup = (props) => {
   const host = "https://notering-backend.onrender.com";
   const [credentials,setCreadentials]=useState({name:'',email:'',password:'',Cpassword:''});
   let navigate= useNavigate();
+  const context=useContext(loadingbarContext);
   const [Pass, setPass] = useState('password');
   const passwordVisibility = () => {
       if (Pass === 'password') {
@@ -16,6 +18,8 @@ const Signup = (props) => {
   }
 
   const handleSubmit = async (e) => {
+    context.setProgress(0);
+        context.setProgress(30);
     e.preventDefault();
     const {name,email,password}=credentials;
     const res = await fetch(`${host}/api/auth/createuser`, {
@@ -25,7 +29,9 @@ const Signup = (props) => {
       },
       body: JSON.stringify({ name,email,password })
     });
+    context.setProgress(70);
     const json = await res.json();
+    context.setProgress(100);
     console.log(json);
     if (json.success) {
       localStorage.setItem('token', json.authToken);

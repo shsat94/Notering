@@ -11,6 +11,7 @@ const NoteState = (props) => {
     //Get all notes
     const fetchAllNotes = async () => {
         //With API call
+         
         const response = await fetch(`${host}/api/notes/fetchallnotes`, {
             method: 'GET',
             headers: {
@@ -18,7 +19,9 @@ const NoteState = (props) => {
                 'auth-token': localStorage.getItem('token')
             }
         });
+         
         const result = await response.json();
+         
         setNotes(result);
 
 
@@ -29,6 +32,7 @@ const NoteState = (props) => {
     //Add a note 
     const addNote = async (title, description, tag) => {
         //With API call
+         
         const res = await fetch(`${host}/api/notes/addnote`, {
             method: 'POST',
             headers: {
@@ -37,14 +41,16 @@ const NoteState = (props) => {
             },
             body: JSON.stringify({ title, description, tag })
         });
+         
         const response =await res.json();
-
+         
         setNotes(notes.concat(response));
     }
 
     //Delete a note
     const deleteNote = async(id) => {
         //API Call
+         
         const res = await fetch(`${host}/api/notes/deletenote/${id}`, {
             method: 'DELETE',
             headers: {
@@ -52,7 +58,9 @@ const NoteState = (props) => {
                 'auth-token': localStorage.getItem('token')
             }
         });
+         
         const response = res.json();
+         
         console.log(response);
         
         const newNotes = notes.filter((note) => { return note._id !== id });
@@ -63,6 +71,7 @@ const NoteState = (props) => {
     //Edit a note
     const editNote = async (id, title, description, tag) => {
         //API CALL
+         
         const res = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: 'PUT',
             headers: {
@@ -71,7 +80,9 @@ const NoteState = (props) => {
             },
             body: JSON.stringify({ title, description, tag })
         });
+         
         const response= await res.json();
+         
         console.log(response);
 
         for (let index = 0; index < notes.length; index++) {

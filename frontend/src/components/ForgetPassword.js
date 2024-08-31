@@ -59,6 +59,7 @@ const ForgetPassword = (props) => {
     }
     
     const submitPassword = async(e) => {
+        context.setProgress(0);
         e.preventDefault();
         const res = await fetch(`${host}/api/forgetpass/resetpass`, {
             method:'PUT',
@@ -67,7 +68,9 @@ const ForgetPassword = (props) => {
             },
             body: JSON.stringify({email:credentials.email, password:credentials.password})
         });
+        context.setProgress(70);
         const response=await res.json();
+        context.setProgress(100);
         props.showAlert(response,"success");
         navigate('/login');
     }
