@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Signup = (props) => {
+  const host = "https://notering-backend.onrender.com";
   const [credentials,setCreadentials]=useState({name:'',email:'',password:'',Cpassword:''});
   let navigate= useNavigate();
   const [Pass, setPass] = useState('password');
@@ -17,7 +18,7 @@ const Signup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {name,email,password}=credentials;
-    const res = await fetch(`https://notering-backend.onrender.com/api/auth/createuser`, {
+    const res = await fetch(`${host}/api/auth/createuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

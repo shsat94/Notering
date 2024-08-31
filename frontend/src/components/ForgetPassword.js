@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import loadingbarContext from '../context/notes/LoadingbarContext';
 
 const ForgetPassword = (props) => {
+    const host = "https://notering-backend.onrender.com";
+    const context=useContext(loadingbarContext);
     const [credentials, setCreadentials] = useState({ email: '', otp: '', password: '' });
     const [disbale, setdiable] = useState(true);
     const [otpDisable, setOtpDisable] = useState(false);
@@ -36,24 +39,28 @@ const ForgetPassword = (props) => {
 
     const handleSendOTP = async (e) => {
         e.preventDefault();
-        const res = await fetch(`https://notering-backend.onrender.com/api/forgetpass/send-otp`, {
+        context.setProgress(30);
+        
+        const res = await fetch(`${host}/api/forgetpass/send-otp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email: credentials.email })
         });
+        context.setProgress(70);
         const response = await res.json();
         setgenOTP(response.generatedOtp);
         props.showAlert("OTP is send to your email id", "success");
         setSendOtpLabel('Resend OTP');
+        context.setProgress(100);
         setdiable(false);
 
     }
     
     const submitPassword = async(e) => {
         e.preventDefault();
-        const res = await fetch('https://notering-backend.onrender.com/api/forgetpass/resetpass', {
+        const res = await fetch(`${host}/api/forgetpass/resetpass`, {
             method:'PUT',
             headers:{
                 'Content-Type': 'application/json'

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {Link,useLocation, useNavigate} from 'react-router-dom';
+import LoadingBar from 'react-top-loading-bar';
+import loadingbarContext from '../context/notes/LoadingbarContext';
 
 
 const Navbar = () => {
@@ -9,6 +11,8 @@ const Navbar = () => {
         localStorage.removeItem('token');
         navigate('/login');
     }
+    const context = useContext(loadingbarContext);
+    const {progress}=context;
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,6 +39,11 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
+            <LoadingBar
+              height={3}
+              color='#f11946'
+              progress={progress}
+            />
         </>
     )
 }
