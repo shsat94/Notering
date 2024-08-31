@@ -4,6 +4,16 @@ import { useNavigate } from 'react-router-dom';
 const Signup = (props) => {
   const [credentials,setCreadentials]=useState({name:'',email:'',password:'',Cpassword:''});
   let navigate= useNavigate();
+  const [Pass, setPass] = useState('password');
+  const passwordVisibility = () => {
+      if (Pass === 'password') {
+          setPass('text');
+      }
+      else {
+          setPass('password');
+      }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {name,email,password}=credentials;
@@ -45,11 +55,12 @@ const Signup = (props) => {
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">Password</label>
-          <input type="password" className="form-control" name='password' id="password" onChange={onChange} required minLength={5} />
+          <input type={Pass} className="form-control" name='password' id="password" onChange={onChange} required minLength={5} />
+        <input type="checkbox" onClick={passwordVisibility} style={{ marginTop: '0.4rem' }} /> <span className='mx-1'>Show Password</span>
         </div>
         <div className="mb-3">
           <label htmlFor="Cpassword" className="form-label">Confirm Password</label>
-          <input type="password" className="form-control" name='Cpassword' id="Cpassword" onChange={onChange} required minLength={5} />
+          <input type={Pass} className="form-control" name='Cpassword' id="Cpassword" onChange={onChange} required minLength={5} />
         </div>
 
         <button type="submit" className="btn btn-primary">Submit</button>

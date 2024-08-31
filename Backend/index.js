@@ -14,6 +14,7 @@ app.use('/api/notes',require('./routes/notes'))
 app.use('/api/forgetpass',require('./routes/forgetpass'))
 
 
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
