@@ -27,13 +27,13 @@ router.post('/send-otp',[
             secure: true,
             port:465,
             auth:{
-                user:'velociraptorindustries@gmail.com',
-                pass:'cjka dvjk bbpq agnb'
+                user:'velociraptorindustries.home@gmail.com',
+                pass:'jklf zwbm axlc lerz'
             }
         });
 
         const reciever={
-            from: "velociraptorindustries@gmail.com",
+            from: "velociraptorindustries.home@gmail.com",
             to : `${email}`,
             subject : "OTP for resetting the password",
             text:`OTP to reset your password of notering is ${generatedOtp}` 
